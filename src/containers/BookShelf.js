@@ -5,6 +5,10 @@ class BookShelf extends React.Component {
     static propTypes = {
         books: PropTypes.array.isRequired,
         title: PropTypes.string.isRequired,
+        onMove: PropTypes.func.isRequired,
+    }
+    updateBook = (id,shelf) =>{
+        this.props.onMove(id,shelf);
     }
     render() {
         return(
@@ -18,7 +22,7 @@ class BookShelf extends React.Component {
                                 <div className="book-top">
                                     <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
                                     <div className="book-shelf-changer">
-                                        <select>
+                                        <select value={book.shelf} onChange={e => this.updateBook(book,e.target.value)}>
                                             <option value="none" disabled>Move to...</option>
                                             <option value="currentlyReading">Currently Reading</option>
                                             <option value="wantToRead">Want to Read</option>
@@ -28,7 +32,7 @@ class BookShelf extends React.Component {
                                     </div>
                                 </div>
                                 <div className="book-title">{book.title}</div>
-                                <div className="book-authors">{book.authors[0]}</div>
+                                <div className="book-authors">{book.authors}</div>
                             </div>
                         </li>
                     ))}

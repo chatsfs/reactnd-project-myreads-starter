@@ -11,18 +11,30 @@ class BooksApp extends React.Component {
     showSearchPage: true,
     books:[],
   }
-  componentDidMount() {
+  componentDidMount=_=> {
     BooksAPI.getAll().then(books => {this.setState({books})})
   }
-
+  updateBook= (book,shelf) =>{
+    if (this.state.books) {
+      BooksAPI.update(book,shelf).then(() => {
+        book.shelf = shelf;
+        this.setState(state => ({
+          books: state.books.filter(b => b.id !== book.id).concat([ book ])
+        }))
+      })
+    }
+  }
+  searchBook= query=>{
+    BooksAPI.search()
+  }
   render() {
     return (
       <div className="app">
         <Route exact path="/" render={_ => (
-          <MainShelf books={this.state.books}/>
+          <MainShelf books={this.state.books} onUpdateBook={this.updateBook}/>
         )}/>
         <Route path="/search" render={({history})=>(
-          <SearchPage/>
+          <SearchPage booksOnShelf={this.state.books} onMove={this.updateBook} searchResult={this.state.searchResult} />
         )}/>
           
        
